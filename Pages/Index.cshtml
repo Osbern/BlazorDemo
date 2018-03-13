@@ -1,0 +1,43 @@
+@inject IBlogService Blog
+
+<h1>Blog Posts</h1>
+
+@if (posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var post in posts)
+        {
+            <li>
+                <h4>@post.title</h4>
+                @if (post.isEnabled)
+                {
+                    <p>@post.body</p>
+                }
+
+                <button onclick=@{ post.isEnabled = !post.isEnabled; }>
+                    @if (!post.isEnabled)
+                    {
+                        <h5>Show</h5>
+                    }
+                    else
+                    {
+                        <h5>Hide</h5>
+                    }
+                </button>
+            </li>
+        }
+    </ul>
+}
+
+@functions {
+    PostModel[] posts;
+
+    protected override async Task OnInitAsync()
+    {
+        posts = (await Blog.GetAllPostAsync()).ToArray();
+    }
+}
